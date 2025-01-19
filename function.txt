@@ -1,6 +1,1 @@
-MAX LEVEL|_ZNK11UserProfile5levelEv|6400A0E31EFF2FE1
-MAX XP|_ZNK11UserProfile2xpEv|FF090CE30010A0E39A0B43E31EFF2FE1
-Fake Enemy Information|_ZNK10PlayerInfo5levelEv|5000A0E31EFF2FE1
-Unlock Everything|_ZNK10UserWallet15quantityOwnedOfERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE|5000A0E31EFF2FE1A
-MAX Level Weapon|_ZNK10UserWallet22maxOwnedLevelForWeaponERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE|5000A0E31EFF2FE1
-Magik Zoom2|_ZN6Weapon15changeZoomLevelEv|00 00 55 E1 FA 15 A0 03 60 11 84 05 07 00 00 0A 00 10 A0 83 5C 11 84 85
+
