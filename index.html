@@ -3,372 +3,223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Processor</title>
+    <link rel="stylesheet" href="style.css">
+    <title>File Processing</title>
     <style>
-       
-/* General Styles */
-body {
-    font-family: 'Courier New', monospace;
-    background-color: #0e0e0e; /* Dark background */
-    color: #00ff00; /* Green text for hacker theme */
-    margin: 0;
-    padding: 0;
-    text-align: center;
-    overflow: visible; /* Prevent scroll bars from appearing */
-}
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
 
-.container {
-    max-width: 90%;
-    margin: 20px auto;
-    background-color: #1a1a1a; /* Slightly lighter grey for contrast */
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 255, 0, 0.5); /* Green neon shadow */
-    position: relative; /* Positioning for particles */
-    z-index: 2; /* Layering above particles */
-}
+        .file-upload {
+            margin: 20px 0;
+        }
 
-/* Header and Footer */
-header {
-    background-color: #000000; /* Black for header */
-    padding: 10px 0;
-    position: relative;
-    z-index: 3; /* Layering above particles */
-}
+        #logTerminal {
+            width: 100%;
+            height: 200px;
+            background-color: #222;
+            color: #fff;
+            font-family: "Courier New", monospace;
+            padding: 10px;
+            margin-bottom: 20px;
+            overflow-y: scroll;
+            white-space: pre-wrap;
+        }
 
-footer {
-    background-color: #000000; /* Black for footer */
-    padding: 10px 0;
-    margin-top: 20px;
-    position: relative;
-    z-index: 3; /* Layering above particles */
-}
+        #progressBar {
+            width: 100%;
+            background-color: #ddd;
+        }
 
-/* Heading Styles */
-h1 {
-    font-size: 2rem;
-    margin-bottom: 10px;
-    text-shadow: 0 0 10px #00ff00; /* Green glow */
-}
+        #progressBar div {
+            height: 20px;
+            background-color: #4caf50;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+        }
 
-.subtitle {
-    font-size: 1rem;
-    margin-bottom: 20px;
-}
+        button {
+            padding: 10px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
 
-/* File Upload Section */
-.file-upload {
-    margin: 20px 0;
-}
+        button:disabled {
+            background-color: #ccc;
+        }
 
-.file-upload input[type="file"] {
-    padding: 10px;
-    border: 1px solid #00ff00; /* Green border */
-    margin-right: 10px;
-    font-size: 1rem;
-    width: 97%;
-    background-color: #333; /* Darker input background */
-    color: #00ff00; /* Green text */
-}
-
-.file-upload button {
-    padding: 10px 20px;
-    background-color: #00ff00; /* Bright green */
-    color: #000; /* Black text */
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    width: 100%;
-    margin-top: 10px;
-    border-radius: 5px;
-}
-
-.file-upload button:hover {
-    background-color: #00cc00; /* Darker green on hover */
-}
-
-/* Table Styling */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-table, th, td {
-    border: 1px solid #444; /* Dark grey borders */
-}
-
-th, td {
-    padding: 10px;
-    text-align: left;
-    font-size: 1rem;
-}
-
-th {
-    background-color: #00ff00; /* Bright green header */
-    color: #000;
-    text-shadow: 0 0 10px #00cc00; /* Green glow */
-}
-
-td {
-    background-color: #444; /* Dark grey for rows */
-    color: #00ff00; /* Green text */
-}
-
-/* Progress Bar */
-#progressContainer {
-    margin: 20px 0;
-}
-
-#progressBar {
-    width: 100%;
-    height: 20px;
-    background-color: #555; /* Dark grey */
-    border-radius: 5px;
-    overflow: hidden;
-}
-
-#progressBar div {
-    height: 100%;
-    background-color: #00ff00; /* Bright green for the progress */
-    width: 0; /* Start width */
-    transition: width 0.4s; /* Smooth transition */
-}
-
-/* Download link */
-a#downloadLink {
-    margin-top: 20px;
-    display: none;
-    color: #00cc00; /* Bright green */
-    font-size: 1.1rem;
-}
-
-/* Media Queries for Responsiveness */
-@media (max-width: 768px) {
-    .container {
-        padding: 15px;
-    }
-    h1 {
-        font-size: 1.8rem;
-    }
-    .subtitle {
-        font-size: 0.9rem;
-    }
-    .file-upload input[type="file"] {
-        font-size: 0.9rem;
-    }
-    .file-upload button {
-        font-size: 0.9rem;
-    }
-    th, td {
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 480px) {
-    h1 {
-        font-size: 1.5rem;
-    }
-    .subtitle {
-        font-size: 0.8rem;
-    }
-    .file-upload input[type="file"] {
-        font-size: 0.85rem;
-    }
-    .file-upload button {
-        font-size: 0.85rem;
-    }
-    th, td {
-        font-size: 0.85rem;
-    }
-}
+        #downloadLink, #logDownloadButton {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
-    <header>
-        <h1>File Processor</h1>
-        <p class="subtitle">Upload a file, process it, and get the results with progress updates.</p>
-    </header>
+    <div id="logTerminal">Log Start</div>
 
-    <div class="container">
-        <div>
-    <button id="logDownloadButton" style="display:none;">Download Log</button>
-</div>
-        <div class="file-upload">
-            <input type="file" id="dumpFile">
-            <button id="processDump">Process File</button>
-        </div>
+    <div class="file-upload">
+        <input type="file" id="dumpFile">
+        <button id="processDump">Process File</button>
+    </div>
 
-        <div id="progressContainer">
-            <div id="progressBar">
-                <div></div>
-            </div>
-        </div>
+    <div id="progressBar"><div>0%</div></div>
 
-        <table>
+    <div id="resultsTableContainer">
+        <table border="1" cellpadding="5" cellspacing="0" style="width: 100%;">
             <thead>
                 <tr>
-                    <th>Function</th>
+                    <th>Function Name</th>
                     <th>Offset</th>
                     <th>Patch</th>
                 </tr>
             </thead>
             <tbody id="resultsTableBody">
-                <!-- Results will be dynamically populated here -->
+                <!-- Results will appear here -->
             </tbody>
         </table>
-
-        <a id="downloadLink" href="#">Download Extracted Data</a>
     </div>
 
+    <a id="downloadLink" href="#" download="extracted_data.txt">Download Extracted Data</a>
+    <button id="logDownloadButton">Download Log</button>
+
     <footer>
-        <p>&copy; 2025 File Processor. All rights reserved.</p>
+        <p>Footer Content Here</p>
     </footer>
 
     <script>
-      const processDumpButton = document.getElementById('processDump');
-const resultsTableBody = document.getElementById('resultsTableBody');
-const progressBar = document.querySelector('#progressBar div');
-const downloadLink = document.getElementById('downloadLink');
-const logDownloadButton = document.getElementById('logDownloadButton');
-let logContent = 'Log Start\n';
+        const processDumpButton = document.getElementById('processDump');
+        const resultsTableBody = document.getElementById('resultsTableBody');
+        const progressBar = document.querySelector('#progressBar div');
+        const downloadLink = document.getElementById('downloadLink');
+        const logDownloadButton = document.getElementById('logDownloadButton');
+        const logTerminal = document.getElementById('logTerminal');
+        let logContent = 'Log Start\n';
 
-// Function to load the function.txt and parse its contents
-function loadFunctions(fileContent) {
-    const functions = [];
-    const lines = fileContent.split('\n');
-    lines.forEach(line => {
-        const parts = line.split('|');
-        if (parts.length === 3) {
-            const fn = parts[0].trim();
-            const fn2 = parts[1].trim();
-            const patch = parts[2].trim();
-            functions.push({ fn, fn2, patch });
+        // Function to load the function.txt file from the same directory
+        function loadFunctionsFromFile() {
+            const functions = [];
+            fetch('function.txt')
+                .then(response => response.text())
+                .then(fileContent => {
+                    logTerminal.textContent += '\nFunction file loaded successfully.\n';
+                    const lines = fileContent.split('\n');
+                    lines.forEach(line => {
+                        const parts = line.split('|');
+                        if (parts.length === 3) {
+                            const fn = parts[0].trim();
+                            const fn2 = parts[1].trim();
+                            const patch = parts[2].trim();
+                            functions.push({ fn, fn2, patch });
+                        }
+                    });
+                    logTerminal.textContent += 'Functions parsed.\n';
+                    return functions;
+                })
+                .catch(error => {
+                    logTerminal.textContent += `Error loading function.txt: ${error.message}\n`;
+                    alert('Error loading function.txt');
+                });
         }
-    });
-    return functions;
-}
 
-processDumpButton.addEventListener('click', () => {
-    const fileInput = document.getElementById('dumpFile');
-    const file = fileInput.files[0];
+        processDumpButton.addEventListener('click', () => {
+            const fileInput = document.getElementById('dumpFile');
+            const file = fileInput.files[0];
 
-    if (!file) {
-        logContent += 'Error: No dump file selected.\n';
-        updateLog();
-        alert('Please upload a dump file.');
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-        const content = event.target.result;
-
-        // Load function definitions from function.txt
-        const functionsFile = document.getElementById('functionsFile'); // Assuming a file input for functions.txt
-        const functionsReader = new FileReader();
-        functionsReader.onload = (e) => {
-            const functionsContent = e.target.result;
-            try {
-                const functions = loadFunctions(functionsContent); // Load functions from the functions.txt
-                logContent += 'Function file loaded successfully.\n';
-                processDump(content, functions); // Process the dump using the loaded functions
-            } catch (error) {
-                logContent += `Error loading functions: ${error.message}\n`;
+            if (!file) {
+                logContent += 'Error: No dump file selected.\n';
                 updateLog();
-                alert('Error loading functions from function.txt');
+                alert('Please upload a dump file.');
+                return;
             }
-        };
-        functionsReader.onerror = () => {
-            logContent += 'Error reading function.txt file.\n';
-            updateLog();
-            alert('Error reading function.txt file.');
-        };
-        functionsReader.readAsText(functionsFile); // Read the functions.txt file
-    };
-    reader.onerror = () => {
-        logContent += 'Error reading dump file.\n';
-        updateLog();
-        alert('Error reading dump file.');
-    };
-    reader.readAsText(file);
-});
 
-function processDump(content, functions) {
-    resultsTableBody.innerHTML = '';
-    progressBar.style.width = '0%';
-    progressBar.textContent = '0%';
-
-    const lines = content.split('\n');
-    let extractedData = '';
-    let processedCount = 0;
-    const totalFunctions = functions.length;
-
-    functions.forEach((func, index) => {
-        setTimeout(() => {
-            let foundOffset = 'Not found';
-            lines.forEach(line => {
-                if (line.includes(func.fn2)) {
-                    const offsetMatch = line.match(/0x[\da-fA-F]+/);
-                    if (offsetMatch) {
-                        foundOffset = offsetMatch[0];
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const content = event.target.result;
+                loadFunctionsFromFile().then(functions => {
+                    if (functions.length === 0) {
+                        logTerminal.textContent += 'Error: No functions found in the function.txt file.\n';
+                        return;
                     }
-                }
+                    processDump(content, functions); // Process the dump using the loaded functions
+                });
+            };
+            reader.onerror = () => {
+                logTerminal.textContent += 'Error reading dump file.\n';
+                alert('Error reading dump file.');
+            };
+            reader.readAsText(file);
+        });
+
+        function processDump(content, functions) {
+            resultsTableBody.innerHTML = '';
+            progressBar.style.width = '0%';
+            progressBar.textContent = '0%';
+
+            const lines = content.split('\n');
+            let extractedData = '';
+            let processedCount = 0;
+            const totalFunctions = functions.length;
+
+            functions.forEach((func, index) => {
+                setTimeout(() => {
+                    let foundOffset = 'Not found';
+                    lines.forEach(line => {
+                        if (line.includes(func.fn2)) {
+                            const offsetMatch = line.match(/0x[\da-fA-F]+/);
+                            if (offsetMatch) {
+                                foundOffset = offsetMatch[0];
+                            }
+                        }
+                    });
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${func.fn}</td>
+                        <td>${foundOffset}</td>
+                        <td>${func.patch}</td>
+                    `;
+                    resultsTableBody.appendChild(row);
+
+                    extractedData += `Mod: ${func.fn}\nOffset: ${foundOffset}\nPatch: ${func.patch}\n\n`;
+
+                    processedCount++;
+                    const progress = Math.round((processedCount / totalFunctions) * 100);
+                    progressBar.style.width = `${progress}%`;
+                    progressBar.textContent = `${progress}%`;
+
+                    if (processedCount === totalFunctions) {
+                        finalizeProcessing(extractedData);
+                    }
+                }, 200 * index); // Incrementally process functions with a delay
             });
+        }
 
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${func.fn}</td>
-                <td>${foundOffset}</td>
-                <td>${func.patch}</td>
-            `;
-            resultsTableBody.appendChild(row);
+        function finalizeProcessing(data) {
+            const blob = new Blob([data], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            downloadLink.href = url;
+            downloadLink.download = 'extracted_data.txt';
+            downloadLink.style.display = 'block';
+            downloadLink.innerText = 'Download Extracted Data';
+        }
 
-            extractedData += `Mod: ${func.fn}\nOffset: ${foundOffset}\nPatch: ${func.patch}\n\n`;
-
-            processedCount++;
-            const progress = Math.round((processedCount / totalFunctions) * 100);
-            progressBar.style.width = `${progress}%`;
-            progressBar.textContent = `${progress}%`;
-
-            if (processedCount === totalFunctions) {
-                finalizeProcessing(extractedData);
-            }
-        }, 200 * index); // Incrementally process functions with a delay
-    });
-}
-
-function finalizeProcessing(data) {
-    const blob = new Blob([data], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    downloadLink.href = url;
-    downloadLink.download = 'extracted_data.txt';
-    downloadLink.style.display = 'block';
-    downloadLink.innerText = 'Download Extracted Data';
-}
-
-function updateLog() {
-    const logBlob = new Blob([logContent], { type: 'text/plain' });
-    const logUrl = URL.createObjectURL(logBlob);
-    logDownloadButton.href = logUrl;
-    logDownloadButton.download = 'process_log.txt';
-    logDownloadButton.style.display = 'block';
-    logDownloadButton.innerText = 'Download Log';
-}
-
-// HTML changes to add log download button
-document.body.innerHTML += `
-    <div>
-        <button id="logDownloadButton" style="display:none;"></button>
-    </div>
-    <div class="file-upload">
-        <input type="file" id="dumpFile">
-        <input type="file" id="functionsFile">
-        <button id="processDump">Process File</button>
-    </div>
-`;
-
-
+        function updateLog() {
+            const logBlob = new Blob([logContent], { type: 'text/plain' });
+            const logUrl = URL.createObjectURL(logBlob);
+            logDownloadButton.href = logUrl;
+            logDownloadButton.download = 'process_log.txt';
+            logDownloadButton.style.display = 'block';
+            logDownloadButton.innerText = 'Download Log';
+        }
     </script>
 </body>
 </html>
