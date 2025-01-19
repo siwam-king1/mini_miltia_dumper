@@ -402,14 +402,20 @@
             });
         }
 
-        function finalizeProcessing(data) {
-            const blob = new Blob([data], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            downloadLink.href = url;
-            downloadLink.download = 'extracted_data.txt';
-            downloadLink.style.display = 'block';
-            downloadLink.innerText = 'Download Extracted Data';
-        }
+       function finalizeProcessing(data) {
+    // Add metadata and credit at the top
+    const metadata = `MINI MILITIA OFFSET DUMPER\nDeveloped by Siwam King1\nTelegram: https://t.me/siwam_king1\n=========================================\n\n`;
+    const fullData = metadata + data;
+
+    // Create and set up the download link
+    const blob = new Blob([fullData], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    downloadLink.href = url;
+    downloadLink.download = 'extracted_data.txt';
+    downloadLink.style.display = 'block';
+    downloadLink.innerText = 'Download Extracted Data';
+}
+
     </script>
 </body>
 </html>
