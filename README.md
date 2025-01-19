@@ -13,9 +13,9 @@ A web-based tool designed for extracting offsets from Mini Militia dump files. U
 
 ## Website Link
 
-[Visit MINI MILITIA DUMPER](https://siwam-king1.github.io/Mini-Militia-Dumper/)  
+[Visit MINI MILITIA DUMPER](https://siwam-king1.github.io/mini_miltia_dumper/)  
 ```
-https://siwam-king1.github.io/Mini-Militia-Dumper/
+https://siwam-king1.github.io/mini_miltia_dumper/
 ```
 
 ## How It Works
