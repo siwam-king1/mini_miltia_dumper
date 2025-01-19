@@ -222,89 +222,107 @@
     </footer>
 
     <script>
-        const functions = [
-            { fn: "MAX LEVEL", fn2: "_ZNK11UserProfile5levelEv", patch: "6400A0E31EFF2FE1" },
-            { fn: "MAX XP", fn2: "_ZNK11UserProfile2xpEv", patch: "FF090CE30010A0E39A0B43E31EFF2FE1" },
-            { fn: "Fake Enemy Information", fn2: "_ZNK10PlayerInfo5levelEv", patch: "5000A0E31EFF2FE1" },
-            { fn: "Unlock Everything", fn2: "_ZNK10UserWallet15quantityOwnedOfERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE", patch: "5000A0E31EFF2FE1A" },
-            { fn: "MAX Level Weapon", fn2: "_ZNK10UserWallet22maxOwnedLevelForWeaponERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE", patch: "5000A0E31EFF2FE1" },
-            { fn: "Magik Zoom2", fn2: "_ZN6Weapon15changeZoomLevelEv", patch: "00 00 55 E1 FA 15 A0 03 60 11 84 05 07 00 00 0A 00 10 A0 83 5C 11 84 85" }
-        ];
+       const processDumpButton = document.getElementById('processDump');
+const resultsTableBody = document.getElementById('resultsTableBody');
+const progressBar = document.querySelector('#progressBar div');
+const downloadLink = document.getElementById('downloadLink');
 
-        const processDumpButton = document.getElementById('processDump');
-        const resultsTableBody = document.getElementById('resultsTableBody');
-        const progressBar = document.querySelector('#progressBar div');
-        const downloadLink = document.getElementById('downloadLink');
+// Function to load the function.txt and parse its contents
+function loadFunctions(fileContent) {
+    const functions = [];
+    const lines = fileContent.split('\n');
+    lines.forEach(line => {
+        const parts = line.split('|');
+        if (parts.length === 3) {
+            const fn = parts[0].trim();
+            const fn2 = parts[1].trim();
+            const patch = parts[2].trim();
+            functions.push({ fn, fn2, patch });
+        }
+    });
+    return functions;
+}
 
-        processDumpButton.addEventListener('click', () => {
-            const fileInput = document.getElementById('dumpFile');
-            const file = fileInput.files[0];
+processDumpButton.addEventListener('click', () => {
+    const fileInput = document.getElementById('dumpFile');
+    const file = fileInput.files[0];
 
-            if (!file) {
-                alert('Please upload a dump file.');
-                return;
-            }
+    if (!file) {
+        alert('Please upload a dump file.');
+        return;
+    }
 
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const content = event.target.result;
-                processDump(content);
-            };
-            reader.readAsText(file);
-        });
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        const content = event.target.result;
 
-        function processDump(content) {
-            resultsTableBody.innerHTML = '';
-            progressBar.style.width = '0%';
-            progressBar.textContent = '0%';
+        // Load function definitions from function.txt
+        const functionsFile = document.getElementById('functionsFile'); // Assuming a file input for functions.txt
+        const functionsReader = new FileReader();
+        functionsReader.onload = (e) => {
+            const functionsContent = e.target.result;
+            const functions = loadFunctions(functionsContent); // Load functions from the functions.txt
 
-            const lines = content.split('\n');
-            let extractedData = '';
-            let processedCount = 0;
-            const totalFunctions = functions.length;
+            processDump(content, functions); // Process the dump using the loaded functions
+        };
+        functionsReader.readAsText(functionsFile); // Read the functions.txt file
+    };
+    reader.readAsText(file);
+});
 
-            functions.forEach((func, index) => {
-                setTimeout(() => {
-                    let foundOffset = 'Not found';
-                    lines.forEach(line => {
-                        if (line.includes(func.fn2)) {
-                            const offsetMatch = line.match(/0x[\da-fA-F]+/);
-                            if (offsetMatch) {
-                                foundOffset = offsetMatch[0];
-                            }
-                        }
-                    });
+function processDump(content, functions) {
+    resultsTableBody.innerHTML = '';
+    progressBar.style.width = '0%';
+    progressBar.textContent = '0%';
 
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${func.fn}</td>
-                        <td>${foundOffset}</td>
-                        <td>${func.patch}</td>
-                    `;
-                    resultsTableBody.appendChild(row);
+    const lines = content.split('\n');
+    let extractedData = '';
+    let processedCount = 0;
+    const totalFunctions = functions.length;
 
-                    extractedData += `Mod: ${func.fn}\nOffset: ${foundOffset}\nPatch: ${func.patch}\n\n`;
-
-                    processedCount++;
-                    const progress = Math.round((processedCount / totalFunctions) * 100);
-                    progressBar.style.width = `${progress}%`;
-                    progressBar.textContent = `${progress}%`;
-
-                    if (processedCount === totalFunctions) {
-                        finalizeProcessing(extractedData);
+    functions.forEach((func, index) => {
+        setTimeout(() => {
+            let foundOffset = 'Not found';
+            lines.forEach(line => {
+                if (line.includes(func.fn2)) {
+                    const offsetMatch = line.match(/0x[\da-fA-F]+/);
+                    if (offsetMatch) {
+                        foundOffset = offsetMatch[0];
                     }
-                }, 200 * index); // Incrementally process functions with a delay
+                }
             });
-        }
 
-        function finalizeProcessing(data) {
-            const blob = new Blob([data], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            downloadLink.href = url;
-            downloadLink.download = 'extracted_data.txt';
-            downloadLink.style.display = 'block';
-            downloadLink.innerText = 'Download Extracted Data';
-        }
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${func.fn}</td>
+                <td>${foundOffset}</td>
+                <td>${func.patch}</td>
+            `;
+            resultsTableBody.appendChild(row);
+
+            extractedData += `Mod: ${func.fn}\nOffset: ${foundOffset}\nPatch: ${func.patch}\n\n`;
+
+            processedCount++;
+            const progress = Math.round((processedCount / totalFunctions) * 100);
+            progressBar.style.width = `${progress}%`;
+            progressBar.textContent = `${progress}%`;
+
+            if (processedCount === totalFunctions) {
+                finalizeProcessing(extractedData);
+            }
+        }, 200 * index); // Incrementally process functions with a delay
+    });
+}
+
+function finalizeProcessing(data) {
+    const blob = new Blob([data], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    downloadLink.href = url;
+    downloadLink.download = 'extracted_data.txt';
+    downloadLink.style.display = 'block';
+    downloadLink.innerText = 'Download Extracted Data';
+}
+
     </script>
 </body>
 </html>
