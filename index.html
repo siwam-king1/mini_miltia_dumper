@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
     <title>File Processing</title>
     <style>
         body {
@@ -122,6 +121,7 @@
                         }
                     });
                     logTerminal.textContent += 'Functions parsed.\n';
+                    console.log(functions); // Check the parsed functions in the console
                     return functions;
                 })
                 .catch(error => {
@@ -144,11 +144,13 @@
             const reader = new FileReader();
             reader.onload = (event) => {
                 const content = event.target.result;
+                logTerminal.textContent += '\nDump file loaded, now loading functions...\n';
                 loadFunctionsFromFile().then(functions => {
                     if (functions.length === 0) {
                         logTerminal.textContent += 'Error: No functions found in the function.txt file.\n';
                         return;
                     }
+                    logTerminal.textContent += 'Functions loaded successfully. Starting to process dump...\n';
                     processDump(content, functions); // Process the dump using the loaded functions
                 });
             };
