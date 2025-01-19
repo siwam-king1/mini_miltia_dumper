@@ -3,114 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SK1 Dumper</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #1e1e2f;
-            color: white;
-            overflow-x: hidden;
-        }
-        .header, .footer {
-            text-align: center;
-            padding: 20px;
-            background: #121223;
-        }
-        .header h1, .footer p {
-            margin: 0;
-            font-size: 1.5em;
-        }
-        .container {
-            padding: 20px;
-            text-align: center;
-        }
-        .subtitle {
-            margin: 10px 0 20px;
-            font-size: 1.2em;
-        }
-        .file-upload {
-            margin: 20px auto;
-        }
-        #dumpFile {
-            margin-right: 10px;
-        }
-        .progress-container {
-            width: 50%;
-            margin: 20px auto;
-            height: 20px;
-            background: #444;
-            border-radius: 10px;
-            overflow: hidden;
-            display: none;
-        }
-        .progress-bar {
-            height: 100%;
-            background: #4caf50;
-            text-align: center;
-            line-height: 20px;
-            color: white;
-            width: 0;
-        }
-        table {
-            margin: 20px auto;
-            width: 90%;
-            border-collapse: collapse;
-            background: #252539;
-            color: white;
-        }
-        table th, table td {
-            padding: 10px;
-            border: 1px solid #444;
-            text-align: center;
-        }
-        table th {
-            background: #121223;
-        }
-        #downloadLink {
-            display: none;
-            margin-top: 20px;
-            color: #4caf50;
-            text-decoration: none;
-        }
-    </style>
+    <title>File Processor</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Assuming your CSS is in styles.css -->
 </head>
 <body>
-
-    <div class="header">
-        <h1>Mini Militia Dumper</h1>
-    </div>
+    <header>
+        <h1>File Processor</h1>
+        <p class="subtitle">Upload a file, process it, and get the results with progress updates.</p>
+    </header>
 
     <div class="container">
-        <p class="subtitle">Upload a .txt Dump File & Extract Offsets</p>
         <div class="file-upload">
-            <input type="file" id="dumpFile" accept=".txt">
-            <button id="processDump">Search & Extract</button>
+            <input type="file" id="dumpFile">
+            <button id="processDump">Process File</button>
         </div>
 
-        <div class="progress-container" id="progressContainer">
-            <div class="progress-bar" id="progressBar">0%</div>
+        <div id="progressContainer">
+            <div id="progressBar">
+                <div></div>
+            </div>
         </div>
 
         <table>
             <thead>
                 <tr>
-                    <th>Mod Name</th>
+                    <th>Function</th>
                     <th>Offset</th>
                     <th>Patch</th>
                 </tr>
             </thead>
-            <tbody id="resultsTableBody"></tbody>
+            <tbody id="resultsTableBody">
+                <!-- Results will be dynamically populated here -->
+            </tbody>
         </table>
 
         <a id="downloadLink" href="#">Download Extracted Data</a>
     </div>
 
-    <div class="footer">
-        <p>&copy; 2025 Developed by Siwam King1</p>
-    </div>
+    <footer>
+        <p>&copy; 2025 File Processor. All rights reserved.</p>
+    </footer>
 
     <script>
         const functions = [
@@ -124,8 +56,7 @@
 
         const processDumpButton = document.getElementById('processDump');
         const resultsTableBody = document.getElementById('resultsTableBody');
-        const progressBar = document.getElementById('progressBar');
-        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.querySelector('#progressBar div');
         const downloadLink = document.getElementById('downloadLink');
 
         processDumpButton.addEventListener('click', () => {
@@ -148,46 +79,52 @@
         function processDump(content) {
             resultsTableBody.innerHTML = '';
             progressBar.style.width = '0%';
-            progressContainer.style.display = 'block';
+            progressBar.textContent = '0%';
 
             const lines = content.split('\n');
             let extractedData = '';
-            let foundCount = 0;
+            let processedCount = 0;
+            const totalFunctions = functions.length;
 
             functions.forEach((func, index) => {
-                let foundOffset = 'Not found';
-                lines.forEach(line => {
-                    if (line.includes(func.fn2)) {
-                        const offsetMatch = line.match(/0x[\da-fA-F]+/);
-                        if (offsetMatch) {
-                            foundOffset = offsetMatch[0];
+                setTimeout(() => {
+                    let foundOffset = 'Not found';
+                    lines.forEach(line => {
+                        if (line.includes(func.fn2)) {
+                            const offsetMatch = line.match(/0x[\da-fA-F]+/);
+                            if (offsetMatch) {
+                                foundOffset = offsetMatch[0];
+                            }
                         }
+                    });
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${func.fn}</td>
+                        <td>${foundOffset}</td>
+                        <td>${func.patch}</td>
+                    `;
+                    resultsTableBody.appendChild(row);
+
+                    extractedData += `Mod: ${func.fn}\nOffset: ${foundOffset}\nPatch: ${func.patch}\n\n`;
+
+                    processedCount++;
+                    const progress = Math.round((processedCount / totalFunctions) * 100);
+                    progressBar.style.width = `${progress}%`;
+                    progressBar.textContent = `${progress}%`;
+
+                    if (processedCount === totalFunctions) {
+                        finalizeProcessing(extractedData);
                     }
-                });
-
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${func.fn}</td>
-                    <td>${foundOffset}</td>
-                    <td>${func.patch}</td>
-                `;
-                resultsTableBody.appendChild(row);
-
-                extractedData += `Mod: ${func.fn}\nOffset: ${foundOffset}\nPatch: ${func.patch}\n\n`;
-
-                foundCount++;
-                progressBar.style.width = `${((index + 1) / functions.length) * 100}%`;
+                }, 200 * index); // Incrementally process functions with a delay
             });
-
-            progressBar.style.width = '100%';
-            downloadExtractedData(extractedData);
         }
 
-        function downloadExtractedData(data) {
+        function finalizeProcessing(data) {
             const blob = new Blob([data], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
             downloadLink.href = url;
-            downloadLink.download = 'extracted_data_sk1.txt';
+            downloadLink.download = 'extracted_data.txt';
             downloadLink.style.display = 'block';
             downloadLink.innerText = 'Download Extracted Data';
         }
