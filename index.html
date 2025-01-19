@@ -222,14 +222,563 @@
     </footer>
 
     <script>
-        const functions = [
-            { fn: "MAX LEVEL", fn2: "_ZNK11UserProfile5levelEv", patch: "6400A0E31EFF2FE1" },
-            { fn: "MAX XP", fn2: "_ZNK11UserProfile2xpEv", patch: "FF090CE30010A0E39A0B43E31EFF2FE1" },
-            { fn: "Fake Enemy Information", fn2: "_ZNK10PlayerInfo5levelEv", patch: "5000A0E31EFF2FE1" },
-            { fn: "Unlock Everything", fn2: "_ZNK10UserWallet15quantityOwnedOfERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE", patch: "5000A0E31EFF2FE1A" },
-            { fn: "MAX Level Weapon", fn2: "_ZNK10UserWallet22maxOwnedLevelForWeaponERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE", patch: "5000A0E31EFF2FE1" },
-            { fn: "Magik Zoom2", fn2: "_ZN6Weapon15changeZoomLevelEv", patch: "00 00 55 E1 FA 15 A0 03 60 11 84 05 07 00 00 0A 00 10 A0 83 5C 11 84 85" }
-        ];
+               const functions = [
+    {
+        fn: "MAX LEVEL",
+        fn2: "_ZNK11UserProfile5levelEv",
+        patch: "6400A0E31EFF2FE1"
+    },
+    {
+        fn: "MAX XP",
+        fn2: "_ZNK11UserProfile2xpEv",
+        patch: "FF090CE30010A0E39A0B43E31EFF2FE1"
+    },
+    {
+        fn: "Fake Enemy Information",
+        fn2: "_ZNK10PlayerInfo5levelEv",
+        patch: "5000A0E31EFF2FE1"
+    },
+    {	
+        fn: "Unlock Everything",
+        fn2: "_ZNK10UserWallet15quantityOwnedOfERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE",
+        patch: "5000A0E31EFF2FE1A"
+    },
+    {
+        fn: "MAX Level Weapon",
+        fn2: "_ZNK10UserWallet22maxOwnedLevelForWeaponERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE",
+        patch: "5000A0E31EFF2FE1"
+    },
+    {
+        fn: "Remove Early Quit Ads(First BL)",
+        fn2: "_ZN20ApplicationInterface16checkQuitEarlyAdEP20QuitAdCheckInterface",
+        patch: "4F 00 00 EA"
+    },
+    {
+        fn: "Game Run In Background",
+        fn2: "_ZN11AppDelegate36applicationDidEnterBackgroundAndroidEPN7cocos2d8CCObjectE",
+        patch: "1E FF 2F E1"
+    },
+    {
+        fn: "Lan Player Limit 256",
+        fn2: "_ZN14PlayerLobbyLAN4initEv",
+        patch: "FF 10 A0 E3"
+    },
+    {
+        fn: "Custom Player Limit 12(LDR before Compare)",
+        fn2: "_ZN18GameCustomizeLayer9addPlayerEPN7cocos2d8CCObjectE",
+        patch: "0C 10 A0 E3"
+    },
+    {
+        fn: "Unlimited Health",
+        fn2: "_ZN22SoldierLocalController9addDamageEfNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEib",
+        patch: "1E FF 2F E1"
+    },
+    {
+        fn: "Unlocked Propack",
+        fn2: "_ZN10IapManager18isProductPurchasedENSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE",
+        patch: "01 00 A0 E3 1E FF 2F E1"
+    },
+    {
+        fn: "Store Item Unlocked",
+        fn2: "_ZN12ItemPurchase15isItemPurchasedENSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE",
+        patch: "01 00 A0 E3 1E FF 2F E1"
+    },
+    {
+        fn: "Unlimited Flying Power",
+        fn2: "_ZN22SoldierLocalController8hasPowerEv",
+        patch: "01 00 A0 E3 1E FF 2F E1"
+    },
+    {
+        fn: "Bullets Per Shots(00 to FF)",
+        fn2: "_ZN6Weapon16getRoundsPerFireEv",
+        patch: "** 00 A0 E3"
+    }
+    {
+        fn: "Unlimited Ammo",
+        fn2: "_ZN6Weapon7getAmmoEv",
+        patch: "83 1F A0 E3 04 20 A0 E3 B1 20 80 E1 F1 00 90 E1"
+    },
+    {
+        fn: "Unlimited Clip",
+        fn2: "_ZN6Weapon7getClipEv",
+        patch: "01 00 A0 E3 1E FF 2F E1 0E 10 A0 E3"
+    },
+    {
+        fn: "Weapon Reload Time",
+        fn2: "_ZN6Weapon13getReloadTimeEv",
+        patch: "00 00 A0 E3 1E FF 2F E1"
+    },
+    {
+        fn: "Anti Gravity",
+        fn2: "_ZN10MapManager16getGravityFactorEv",
+        patch: "00 00 A0 E3"
+    },
+    {
+        fn: "Any Gun Dual Wield",
+        fn2: "_ZN6Weapon11isDualWieldEv",
+        patch: "01 00 A0 E3"
+    },
+    {
+        fn: "Any Gun Dual Wield2",
+        fn2: "_ZN6Weapon22isDualWieldPrimaryOnlyEv",
+        patch: "01 00 A0 E3"
+    },
+    {
+        fn: "Fly Through Walls",
+        fn2: "_ZN10MapManager18addStaticBodyShapeEii",
+        patch: "1E FF 2F E1"
+    },
+    {
+        fn: "REMOVE ROBOT",
+        fn2: "_ZN13SurvivalStage10spawnEnemyEv",
+        patch: "6400A0E31EFF2FE1"
+    },
+    {
+        fn: "Robots Can't See",
+        fn2: "_ZN5Enemy12canSeeTargetEv",
+        patch: "00 00 A0 E3 1E FF 2F E1"
+    },
+    {
+        fn: "All Weapon Laser",
+        fn2: "_ZN13WeaponFactory12isLaserSightE8ItemType",
+        patch: "01 00 A0 E3 1E FF 2F E1"
+    },
+    {
+        fn: "Respawn Time Mod(MOV)",
+        fn2: "_ZN14SoldierManager13respawnPlayerEPN7cocos2d8CCObjectE",
+        patch: "00 7A F7 EE 90 1A 17 EE 00 10 00 E3 80 1F 43 E3"
+    },
+    {
+        fn: "Invisible Mod",
+        fn2: "_ZN14NetworkManager16sendPositionDataEfb",
+        patch: "1E FF 2F E1"
+    },
+    {
+        fn: "Die By Guns Only",
+        fn2: "_ZN9Explosion11applyDamageEf",
+        patch: "1E FF 2F E1"
+    },
+    {
+        fn: "Die By Guns Only2",
+        fn2: "_ZN8GasCloud11applyDamageEf",
+        patch: "1E FF 2F E1"
+    }
+  {
+    fn: "Die By Guns Only3",
+    fn2: "_ZN10PlasmaBall11applyDamageEf",
+    patch: "1E FF 2F E1"
+  },
+  {
+    fn: "Custom Skills(** - 0 to 99)",
+    fn2: "_ZN17LeaderBoardBridge15calcPlayerSkillEv",
+    patch: "** 00 A0 E3 1E FF 2F E1"
+  },
+  {
+    fn: "Custom Skills2",
+    fn2: "_ZN17LeaderBoardBridge20getCachedPlayerSkillEv",
+    patch: "** 00 A0 E3 1E FF 2F E1"
+  },
+  {
+    fn: "Custom Symbol(0=IOS, 1=Android, 2=Amazon Fire, 3=Windows)",
+    fn2: "_ZN20ApplicationInterface9getOSTypeEv",
+    patch: "** 00 A0 E3"
+  },
+  {
+    fn: "Bullet Speed Hack",
+    fn2: "_ZN6Weapon14getBulletSpeedEv",
+    patch: "FF 0F 0F E3"
+  },
+  {
+    fn: "Speed Hack(Near =0.0001, #1.5)",
+    fn2: "_ZN22SoldierLocalController10updateStepEf6cpVectS0_f",
+    patch: "08 0A B1 EE"
+  },
+  {
+    fn: "Bullet Range Hack",
+    fn2: "_ZN6Weapon8getRangeEv",
+    patch: "FF 0F 0F E3"
+  },
+  {
+    fn: "Zoom Selector",
+    fn2: "_ZN6Weapon12getZoomScaleEv",
+    patch: "CD 0C 0C E3 CC 0E 43 E3 1E FF 2F E1"
+  },
+  {
+    fn: "First Gun(LDR R1)",
+    fn2: "_ZN13WeaponFactory23createRandomStartWeaponEv",
+    patch: "** 10 A0 E3"
+  },
+  {
+    fn: "First Gun2",
+    fn2: "_ZN14SoldierManager11spawnPlayerEv",
+    patch: "** 10 A0 E3"
+  },
+  {
+    fn: "Second Gun",
+    fn2: "_ZN14SoldierManager11spawnPlayerEv",
+    patch: "** 10 A0 E3"
+  },
+  {
+    fn: "First Bomb",
+    fn2: "_ZN14SoldierManager11spawnPlayerEv",
+    patch: "** 10 A0 E3"
+  },
+  {
+    fn: "Second Bomb",
+    fn2: "_ZN14SoldierManager11spawnPlayerEv",
+    patch: "** 10 A0 E3"
+  },
+  {
+    fn: "Weapon in Survival",
+    fn2: "_ZN13SurvivalStage9playRoundEf",
+    patch: "** 10 A0 E3"
+  },
+  {
+    fn: "Bullet Through Walls",
+    fn2: "_ZN6Tracer7onSparkE18cpSegmentQueryInfo",
+    patch: "1E FF 2F E1"
+  },
+  {
+    fn: "Infinite Proxy Throw",
+    fn2: "_ZN9PROXYNADE14updateItemStepEf",
+    patch: "00 F0 20 E3"
+  },
+  {
+    fn: "Attach Proxy",
+    fn2: "_ZN9PROXYNADE14updateItemStepEf",
+    patch: "00 F0 20 E3"
+  },
+  {
+    fn: "Auto Fire",
+    fn2: "_ZN6Joypad4fireEv",
+    patch: "01 00 A0 E3"
+  },
+  {
+    fn: "No Bullet Spread",
+    fn2: "_ZN6Weapon20getRandomFiringAngleEv",
+    patch: "00 00 A0 E3"
+  },
+  {
+    fn: "Any Weapon Lobby",
+    fn2: "_ZN13WeaponManager22getWeaponForSpawnPointEPN7cocos2d12CCDictionaryE",
+    patch: "** 10 A0 E3"
+  },
+  {
+    fn: "Any Weapon Lobby2",
+    fn2: "_ZN13WeaponFactory18createRandomWeaponEv",
+    patch: "** 10 A0 E3"
+  },
+  {
+    fn: "Instant Weapon Spawn",
+    fn2: "_ZN13WeaponManager14setSpawnPeriodEPN7cocos2d12CCDictionaryEf",
+    patch: "00 00 A0 E3"
+  },
+  {
+    fn: "Instant Weapon Spawn2",
+    fn2: "_ZN14NetworkManager13isLocalLeaderEv",
+    patch: "01 00 A0 E3 1E FF 2F E1"
+  }
+  [
+  {
+    fn: "Maximum Game Time(CMP)",
+    fn2: "_ZN18GameCustomizeLayer7addTimeEPN7cocos2d8CCObjectE",
+    patch: "00 F0 20 E3 00 F0 20 E3"
+  },
+  {
+    fn: "Maximum Game Time2",
+    fn2: "_ZN18GameCustomizeLayer7subTimeEPN7cocos2d8CCObjectE",
+    patch: "00 00 50 E3"
+  },
+  {
+    fn: "No Dual Throw",
+    fn2: "_ZN22SoldierLocalController9throwDualEv",
+    patch: "08 00 00 EA"
+  },
+  {
+    fn: "Magic Bomb Throw",
+    fn2: "_ZN3HUD9onGrenadeEPN7cocos2d8CCObjectE",
+    patch: "08 1A B7 EE"
+  },
+  {
+    fn: "Magic Melee Punch",
+    fn2: "_ZN3HUD7onPunchEPN7cocos2d8CCObjectE",
+    patch: "08 1A B7 EE"
+  },
+  {
+    fn: "Endless Saw(VADD)",
+    fn2: "_ZN3SAW14updateItemStepEf",
+    patch: "00 F0 20 E3"
+  },
+  {
+    fn: "Hide Your Weapons",
+    fn2: "_ZN14NetworkManager16sendWeaponChangeEPN7cocos2d8CCObjectE",
+    patch: "1E FF 2F E1"
+  },
+  {
+    fn: "Survival Play Count(00 to FF)",
+    fn2: "_ZN13SurvivalStage10setupStageEv",
+    patch: "** 10 A0 E3"
+  },
+  {
+    fn: "Sarge Weapon(00 to FF)",
+    fn2: "_ZN13SurvivalStage10setupStageEv",
+    patch: "** 10 A0 E3"
+  },
+  {
+    fn: "Sarge Weapon2",
+    fn2: "_ZN13SurvivalStage10setupStageEv",
+    patch: "** 10 A0 E3"
+  },
+  {
+    fn: "Any Map Survival",
+    fn2: "_ZN14LocalGameLayer10onSurvivalEPN7cocos2d8CCObjectE",
+    patch: "03 00 A0 E3"
+  },
+  {
+    fn: "REBORN MAP",
+    fn2: "_ZN14SoldierManager22calculateSpawnPositionEv",
+    patch: "6400A0E31EFF2FE1"
+  },
+  {
+    fn: "Saw Damage Remove",
+    fn2: "_ZN3SAW17checkMapCollisionEP17SoldierController",
+    patch: "00 00 A0 E3 1E FF 2F E1"
+  },
+  {
+    fn: "Hide from Proxy",
+    fn2: "_ZN9ProxyMine10updateStepEf",
+    patch: "00 F0 20 E3"
+  },
+  {
+    fn: "Endless Proxy",
+    fn2: "_ZN9ProxyMine10updateStepEf",
+    patch: "03 00 00 EA"
+  },
+  {
+    fn: "Fake Skills(00 to FF)",
+    fn2: "_ZN14NetworkManager15sendPlayerSetupENSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEiS6_iS6_",
+    patch: "** 50 A0 E3"
+  },
+  {
+    fn: "High Damage Melee",
+    fn2: "_ZN6Weapon14getMeleeDamageEv",
+    patch: "23 00 A0 E3"
+  },
+  {
+    fn: "High Melee Length",
+    fn2: "_ZN6Weapon14getMeleeLengthEv",
+    patch: "FF 0F 0F E3"
+  },
+  {
+    fn: "Dual Gun On Spawn",
+    fn2: "_ZN6Weapon12pickupAsDualEv",
+    patch: "01 00 A0 E3"
+  }
+  {
+    fn: "Instant Health Fill(#0x1AC])",
+    fn2: "_ZN22SoldierLocalController10updateStepEf6cpVectS0_f",
+    patch: "09 00 00 EA"
+},
+{
+    fn: "Kill Team Mate",
+    fn2: "_ZN22SoldierLocalController10isSameTeamEi",
+    patch: "01 00 A0 E3 1E FF 2F E1"
+},
+{
+    fn: "Custom Rank",
+    fn2: "_ZN17LeaderBoardBridge13calcPlayerExpEv",
+    patch: "64 00 B0 E3 0A 10 B0 E3 90 00 10 E0 91 00 10 E0 1E FF 2F E1"
+},
+{
+    fn: "Health And Nitro Charging EMP",
+    fn2: "_ZN10PlasmaBall11applyDamageEf",
+    patch: "0E 10 A0 E3(Health)\n          0F 10 A0 E3(Nitro)"
+},
+{
+    fn: "No Damage Crouch",
+    fn2: "_ZN22SoldierLocalController9addDamageEfNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEib",
+    patch: "66 01 D4 E5 00 00 50 E3 00 90 A0 13"
+},
+{
+    fn: "Gas From Any Bomb",
+    fn2: "_ZN14EffectsManager11onExplosionEPN7cocos2d8CCObjectE",
+    patch: "14 00 A0 E3"
+},
+{
+    fn: "Half Damage",
+    fn2: "_ZN22SoldierLocalController9addDamageEfNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEib",
+    patch: "10 9A 08 EE 00 0A B0 EE 00 8A 88 EE 10 9A 18 EE"
+},
+{
+    fn: "Hide Bomb Throw",
+    fn2: "_ZN14NetworkManager16sendWeaponCreateEPN7cocos2d8CCObjectE",
+    patch: "1E FF 2F E1"
+},
+{
+    fn: "Any Weapon as Granade",
+    fn2: "_ZN17ProjectileManager10addGrenadeE6cpVectfS0_bNSt6__ndk112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEi",
+    patch: "** 10 A0 E3"
+},
+{
+    fn: "Any Weapon from SMAW(Rocket Launcher)",
+    fn2: "_ZN17ProjectileManager9addRocketE6cpVectfS0_P6WeaponbNSt6__ndk112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE",
+    patch: "** 10 A0 E3"
+},
+{
+    fn: "Any Weapon from SAW Gun",
+    fn2: "_ZN17ProjectileManager6addSawE6cpVectfS0_P6WeaponbNSt6__ndk112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE",
+    patch: "** 10 A0 E3"
+},
+{
+    fn: "Any Weapon from RG6(MortarLauncher)",
+    fn2: "_ZN17ProjectileManager8addShellE6cpVectfS0_P6WeaponbNSt6__ndk112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEE",
+    patch: "** 10 A0 E3"
+},
+{
+    fn: "Weapon Dmage",
+    fn2: "_ZN6Weapon9getDamageEv",
+    patch: "FF0F0FE3"
+},
+{
+    fn: "Rocket Sprayer(SMAW)",
+    fn2: "_ZN4SMAW11triggerPullEf",
+    patch: "00 F0 20 E3"
+},
+{
+    fn: "Saw Sprayer",
+    fn2: "_ZN6SAWGUN11triggerPullEf",
+    patch: "00 F0 20 E3"
+},
+{
+    fn: "MiniGun Sprayer",
+    fn2: "_ZN7MINIGUN11triggerPullEf",
+    patch: "00 F0 20 E3"
+},
+{
+    fn: "MiniGun Sprayer2",
+    fn2: "_ZN7MINIGUN11triggerPullEf",
+    patch: "00 F0 20 E3"
+},
+{
+    fn: "EMP Sprayer",
+    fn2: "_ZN3EMP11triggerPullEf",
+    patch: "00 F0 20 E3"
+},
+{
+    fn: "Mortar Sprayer(RG6)",
+    fn2: "_ZN3RG611triggerPullEf",
+    patch: "00 F0 20 E3"
+},
+{
+    fn: "Sniper Sprayer",
+    fn2: "_ZN5M93BA11triggerPullEf",
+    patch: "00 F0 20 E3"
+},
+{
+    fn: "Magnum Sprayer",
+    fn2: "_ZN6MAGNUM11triggerPullEf",
+    patch: "00 F0 20 E3"
+},
+{
+    fn: "MP5 Sprayer",
+    fn2: "_ZN3MP511triggerPullEf",
+    patch: "00 F0 20 E3"
+},
+{
+    fn: "TAVOR Sprayer",
+    fn2: "_ZN5TAVOR11triggerPullEf",
+    patch: "00 F0 20 E3"
+},
+{
+    fn: "AK47 Sprayer",
+    fn2: "_ZN4AK4711triggerPullEf",
+    patch: "00 F0 20 E3"
+},
+{
+    fn: "TEC9 Sprayer",
+    fn2: "_ZN4TEC911triggerPullEf",
+    patch: "00 F0 20 E3"
+},
+{
+    fn: "AA12 Sprayer",
+    fn2: "_ZN4AA1211triggerPullEf",
+    patch: "00 F0 20 E3"
+},
+{
+    fn: "HuntingPistol Sprayer",
+    fn2: "_ZN13HuntingPistol11triggerPullEf",
+    patch: "00 F0 20 E3"
+},
+{
+    fn: "Flag Rewarded Gun",
+    fn2: "_ZN13WeaponManager10updateStepEf",
+    patch: "** 10 A0 E3"
+},
+{
+    fn: "CTF always WIN",
+    fn2: "_ZN13WeaponManager10updateStepEf",
+    patch: "00 F0 20 E3"
+}
+{
+    fn: "New Dual Wield1",
+    fn2: "_ZN6Weapon11isDualWieldEv",
+    patch: "01 00 A0 E3"
+},
+{
+    fn: "New Dual Wield2",
+    fn2: "_ZN6Weapon22isDualWieldPrimaryOnlyEv",
+    patch: "01 00 A0 E3"
+},
+{
+    fn: "New Dual Wield3",
+    fn2: "_ZN14NetworkManager16sendWeaponChangeEPN7cocos2d8CCObjectE",
+    patch: "1E FF 2F E1"
+},
+{
+    fn: "Walking Speed(Under =0.0001, #3.0)",
+    fn2: "_ZN22SoldierLocalController10updateStepEf6cpVectS0_f",
+    patch: "0F 7A F3 EE"
+},
+{
+    fn: "M16 Sprayer",
+    fn2: "_ZN3M1614updateItemStepEf",
+    patch: "00 F0 20 E3 00 F0 20 E3"
+},
+{
+    fn: "Gas Cloud Color(Green and Red)(00 to FF)",
+    fn2: "_ZN8GasCloudC2Ev",
+    patch: "** 1* 0* E3"
+},
+{
+    fn: "Gas Cloud Color(Blue)(00 to FF)",
+    fn2: "_ZN8GasCloudC2Ev",
+    patch: "00 ** A0 E3"
+},
+{
+    fn: "No Color GasCloud",
+    fn2: "_ZN8GasCloudC2Ev",
+    patch: "00 F0 20 E3"
+},
+{
+    fn: "Die By Bombs Only",
+    fn2: "_ZN24NetworkMessageDispatcher16updatePeerDamageEPN7cocos2d9extension6CCDataENSt6__ndk112basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEE",
+    patch: "00 F0 20 E3"
+},
+{
+    fn: "Magik Zoom1",
+    fn2: "_ZN6Weapon15changeZoomLevelEv",
+    patch: "01 50 80 E2 5C 51 84 E5"
+},
+{
+    fn: "Magik Zoom2",
+    fn2: "_ZN6Weapon15changeZoomLevelEv",
+    patch: "00 00 55 E1 FA 15 A0 03 60 11 84 05 07 00 00 0A 00 10 A0 83 5C 11 84 85"
+}
+
+	
+
+];
+
 
         const processDumpButton = document.getElementById('processDump');
         const resultsTableBody = document.getElementById('resultsTableBody');
