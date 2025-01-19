@@ -3,140 +3,244 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Processing</title>
+    <title>File Processor</title>
     <style>
+        /* General Styles */
         body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background-color: #f9f9f9;
+            font-family: 'Courier New', monospace;
+            background-color: #0e0e0e; /* Dark background */
+            color: #00ff00; /* Green text for hacker theme */
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            overflow: visible; /* Prevent scroll bars from appearing */
         }
 
+        .container {
+            max-width: 90%;
+            margin: 20px auto;
+            background-color: #1a1a1a; /* Slightly lighter grey for contrast */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 255, 0, 0.5); /* Green neon shadow */
+            position: relative; /* Positioning for particles */
+            z-index: 2; /* Layering above particles */
+        }
+
+        /* Header and Footer */
+        header {
+            background-color: #000000; /* Black for header */
+            padding: 10px 0;
+            position: relative;
+            z-index: 3; /* Layering above particles */
+        }
+
+        footer {
+            background-color: #000000; /* Black for footer */
+            padding: 10px 0;
+            margin-top: 20px;
+            position: relative;
+            z-index: 3; /* Layering above particles */
+        }
+
+        /* Heading Styles */
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #00ff00; /* Green glow */
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        /* File Upload Section */
         .file-upload {
             margin: 20px 0;
         }
 
-        #logTerminal {
-            width: 100%;
-            height: 200px;
-            background-color: #222;
-            color: #fff;
-            font-family: "Courier New", monospace;
+        .file-upload input[type="file"] {
             padding: 10px;
-            margin-bottom: 20px;
-            overflow-y: scroll;
-            white-space: pre-wrap;
+            border: 1px solid #00ff00; /* Green border */
+            margin-right: 10px;
+            font-size: 1rem;
+            width: 97%;
+            background-color: #333; /* Darker input background */
+            color: #00ff00; /* Green text */
+        }
+
+        .file-upload button {
+            padding: 10px 20px;
+            background-color: #00ff00; /* Bright green */
+            color: #000; /* Black text */
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+        .file-upload button:hover {
+            background-color: #00cc00; /* Darker green on hover */
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #444; /* Dark grey borders */
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            font-size: 1rem;
+        }
+
+        th {
+            background-color: #00ff00; /* Bright green header */
+            color: #000;
+            text-shadow: 0 0 10px #00cc00; /* Green glow */
+        }
+
+        td {
+            background-color: #444; /* Dark grey for rows */
+            color: #00ff00; /* Green text */
+        }
+
+        /* Progress Bar */
+        #progressContainer {
+            margin: 20px 0;
         }
 
         #progressBar {
             width: 100%;
-            background-color: #ddd;
+            height: 20px;
+            background-color: #555; /* Dark grey */
+            border-radius: 5px;
+            overflow: hidden;
         }
 
         #progressBar div {
-            height: 20px;
-            background-color: #4caf50;
-            text-align: center;
-            line-height: 20px;
-            color: white;
+            height: 100%;
+            background-color: #00ff00; /* Bright green for the progress */
+            width: 0; /* Start width */
+            transition: width 0.4s; /* Smooth transition */
         }
 
-        button {
-            padding: 10px;
-            background-color: #4caf50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        button:disabled {
-            background-color: #ccc;
-        }
-
-        #downloadLink, #logDownloadButton {
-            display: none;
+        /* Download link */
+        a#downloadLink {
             margin-top: 20px;
-            padding: 10px;
-            background-color: #007BFF;
-            color: white;
-            text-decoration: none;
+            display: none;
+            color: #00cc00; /* Bright green */
+            font-size: 1.1rem;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            .subtitle {
+                font-size: 0.9rem;
+            }
+            .file-upload input[type="file"] {
+                font-size: 0.9rem;
+            }
+            .file-upload button {
+                font-size: 0.9rem;
+            }
+            th, td {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            .subtitle {
+                font-size: 0.8rem;
+            }
+            .file-upload input[type="file"] {
+                font-size: 0.85rem;
+            }
+            .file-upload button {
+                font-size: 0.85rem;
+            }
+            th, td {
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="logTerminal">Log Start</div>
+    <header>
+        <h1>File Processor</h1>
+        <p class="subtitle">Upload a file, process it, and get the results with progress updates.</p>
+    </header>
 
-    <div class="file-upload">
-        <input type="file" id="dumpFile">
-        <button id="processDump">Process File</button>
-    </div>
+    <div class="container">
+        <div class="file-upload">
+            <input type="file" id="dumpFile">
+            <button id="processDump">Process File</button>
+        </div>
 
-    <div id="progressBar"><div>0%</div></div>
+        <div id="progressContainer">
+            <div id="progressBar">
+                <div></div>
+            </div>
+        </div>
 
-    <div id="resultsTableContainer">
-        <table border="1" cellpadding="5" cellspacing="0" style="width: 100%;">
+        <table>
             <thead>
                 <tr>
-                    <th>Function Name</th>
+                    <th>Function</th>
                     <th>Offset</th>
                     <th>Patch</th>
                 </tr>
             </thead>
             <tbody id="resultsTableBody">
-                <!-- Results will appear here -->
+                <!-- Results will be dynamically populated here -->
             </tbody>
         </table>
+
+        <a id="downloadLink" href="#">Download Extracted Data</a>
     </div>
 
-    <a id="downloadLink" href="#" download="extracted_data.txt">Download Extracted Data</a>
-    <button id="logDownloadButton">Download Log</button>
-
     <footer>
-        <p>Footer Content Here</p>
+        <p>&copy; 2025 File Processor. All rights reserved.</p>
     </footer>
 
     <script>
+        const functions = [
+            { fn: "MAX LEVEL", fn2: "_ZNK11UserProfile5levelEv", patch: "6400A0E31EFF2FE1" },
+            { fn: "MAX XP", fn2: "_ZNK11UserProfile2xpEv", patch: "FF090CE30010A0E39A0B43E31EFF2FE1" },
+            { fn: "Fake Enemy Information", fn2: "_ZNK10PlayerInfo5levelEv", patch: "5000A0E31EFF2FE1" },
+            { fn: "Unlock Everything", fn2: "_ZNK10UserWallet15quantityOwnedOfERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE", patch: "5000A0E31EFF2FE1A" },
+            { fn: "MAX Level Weapon", fn2: "_ZNK10UserWallet22maxOwnedLevelForWeaponERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE", patch: "5000A0E31EFF2FE1" },
+            { fn: "Magik Zoom2", fn2: "_ZN6Weapon15changeZoomLevelEv", patch: "00 00 55 E1 FA 15 A0 03 60 11 84 05 07 00 00 0A 00 10 A0 83 5C 11 84 85" }
+        ];
+
         const processDumpButton = document.getElementById('processDump');
         const resultsTableBody = document.getElementById('resultsTableBody');
         const progressBar = document.querySelector('#progressBar div');
         const downloadLink = document.getElementById('downloadLink');
-        const logDownloadButton = document.getElementById('logDownloadButton');
-        const logTerminal = document.getElementById('logTerminal');
-        let logContent = 'Log Start\n';
-
-        // Function to load the function.txt file from the same directory
-        function loadFunctionsFromFile() {
-            const functions = [];
-            fetch('function.txt')
-                .then(response => response.text())
-                .then(fileContent => {
-                    logTerminal.textContent += '\nFunction file loaded successfully.\n';
-                    const lines = fileContent.split('\n');
-                    lines.forEach(line => {
-                        const parts = line.split('|');
-                        if (parts.length === 3) {
-                            const fn = parts[0].trim();
-                            const fn2 = parts[1].trim();
-                            const patch = parts[2].trim();
-                            functions.push({ fn, fn2, patch });
-                        }
-                    });
-                    logTerminal.textContent += 'Functions parsed.\n';
-                    console.log(functions); // Check the parsed functions in the console
-                    return functions;
-                })
-                .catch(error => {
-                    logTerminal.textContent += `Error loading function.txt: ${error.message}\n`;
-                    alert('Error loading function.txt');
-                });
-        }
 
         processDumpButton.addEventListener('click', () => {
             const fileInput = document.getElementById('dumpFile');
             const file = fileInput.files[0];
 
             if (!file) {
-                logContent += 'Error: No dump file selected.\n';
-                updateLog();
                 alert('Please upload a dump file.');
                 return;
             }
@@ -144,24 +248,12 @@
             const reader = new FileReader();
             reader.onload = (event) => {
                 const content = event.target.result;
-                logTerminal.textContent += '\nDump file loaded, now loading functions...\n';
-                loadFunctionsFromFile().then(functions => {
-                    if (functions.length === 0) {
-                        logTerminal.textContent += 'Error: No functions found in the function.txt file.\n';
-                        return;
-                    }
-                    logTerminal.textContent += 'Functions loaded successfully. Starting to process dump...\n';
-                    processDump(content, functions); // Process the dump using the loaded functions
-                });
-            };
-            reader.onerror = () => {
-                logTerminal.textContent += 'Error reading dump file.\n';
-                alert('Error reading dump file.');
+                processDump(content);
             };
             reader.readAsText(file);
         });
 
-        function processDump(content, functions) {
+        function processDump(content) {
             resultsTableBody.innerHTML = '';
             progressBar.style.width = '0%';
             progressBar.textContent = '0%';
@@ -212,15 +304,6 @@
             downloadLink.download = 'extracted_data.txt';
             downloadLink.style.display = 'block';
             downloadLink.innerText = 'Download Extracted Data';
-        }
-
-        function updateLog() {
-            const logBlob = new Blob([logContent], { type: 'text/plain' });
-            const logUrl = URL.createObjectURL(logBlob);
-            logDownloadButton.href = logUrl;
-            logDownloadButton.download = 'process_log.txt';
-            logDownloadButton.style.display = 'block';
-            logDownloadButton.innerText = 'Download Log';
         }
     </script>
 </body>
