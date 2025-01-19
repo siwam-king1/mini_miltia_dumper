@@ -191,6 +191,9 @@ a#downloadLink {
     </header>
 
     <div class="container">
+        <div>
+    <button id="logDownloadButton" style="display:none;">Download Log</button>
+</div>
         <div class="file-upload">
             <input type="file" id="dumpFile">
             <button id="processDump">Process File</button>
@@ -223,10 +226,12 @@ a#downloadLink {
     </footer>
 
     <script>
-       const processDumpButton = document.getElementById('processDump');
+      const processDumpButton = document.getElementById('processDump');
 const resultsTableBody = document.getElementById('resultsTableBody');
 const progressBar = document.querySelector('#progressBar div');
 const downloadLink = document.getElementById('downloadLink');
+const logDownloadButton = document.getElementById('logDownloadButton');
+let logContent = 'Log Start\n';
 
 // Function to load the function.txt and parse its contents
 function loadFunctions(fileContent) {
@@ -249,6 +254,8 @@ processDumpButton.addEventListener('click', () => {
     const file = fileInput.files[0];
 
     if (!file) {
+        logContent += 'Error: No dump file selected.\n';
+        updateLog();
         alert('Please upload a dump file.');
         return;
     }
@@ -262,11 +269,27 @@ processDumpButton.addEventListener('click', () => {
         const functionsReader = new FileReader();
         functionsReader.onload = (e) => {
             const functionsContent = e.target.result;
-            const functions = loadFunctions(functionsContent); // Load functions from the functions.txt
-
-            processDump(content, functions); // Process the dump using the loaded functions
+            try {
+                const functions = loadFunctions(functionsContent); // Load functions from the functions.txt
+                logContent += 'Function file loaded successfully.\n';
+                processDump(content, functions); // Process the dump using the loaded functions
+            } catch (error) {
+                logContent += `Error loading functions: ${error.message}\n`;
+                updateLog();
+                alert('Error loading functions from function.txt');
+            }
+        };
+        functionsReader.onerror = () => {
+            logContent += 'Error reading function.txt file.\n';
+            updateLog();
+            alert('Error reading function.txt file.');
         };
         functionsReader.readAsText(functionsFile); // Read the functions.txt file
+    };
+    reader.onerror = () => {
+        logContent += 'Error reading dump file.\n';
+        updateLog();
+        alert('Error reading dump file.');
     };
     reader.readAsText(file);
 });
@@ -323,6 +346,28 @@ function finalizeProcessing(data) {
     downloadLink.style.display = 'block';
     downloadLink.innerText = 'Download Extracted Data';
 }
+
+function updateLog() {
+    const logBlob = new Blob([logContent], { type: 'text/plain' });
+    const logUrl = URL.createObjectURL(logBlob);
+    logDownloadButton.href = logUrl;
+    logDownloadButton.download = 'process_log.txt';
+    logDownloadButton.style.display = 'block';
+    logDownloadButton.innerText = 'Download Log';
+}
+
+// HTML changes to add log download button
+document.body.innerHTML += `
+    <div>
+        <button id="logDownloadButton" style="display:none;"></button>
+    </div>
+    <div class="file-upload">
+        <input type="file" id="dumpFile">
+        <input type="file" id="functionsFile">
+        <button id="processDump">Process File</button>
+    </div>
+`;
+
 
     </script>
 </body>
